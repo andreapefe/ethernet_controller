@@ -1,7 +1,3 @@
-<script type="text/javascript" id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-</script>
-
 <center> <h1> <b> Conception Controlleur Ethernet sur Vivado en VHDL </b> </h1> </center>
 
 <center> <h3> Léa Scheer et Andrea Pérez </h3>
@@ -20,32 +16,29 @@ Nous avons conçu notre code de façon à avoir au total 5 processus synchrone q
 
 Initialement, nous déclenchons la Clock et désactivons le Reset au bout de 200ns. (indiqué par la doc je crois)
 
-##### Bonne trame de reception
+### Bonne trame de reception
 
 Dans un premier temps nous réalisons une réception de trame correcte à savoir avec un bon début et une bonne fin (X”AB”), la bonne adresse MAC et une donnée correcte.
 
-##### Collision réception transmission
+### Collision réception transmission
 
 Ensuite nous simulons une collision puisque nous activons le “tavailp” en même temps que le “renabp”, donc on essaye à la fois de lire une donnée et d’en transmettre une. Tous les signaux passent alors à 0 et le “rcleanp” se déclenche.
 
-##### Mauvaise trame réception
+### Mauvaise trame réception
 
 On teste ensuite la réception d’une mauvaise trame à savoir avec une mauvaise adresse MAC et un mauvais début de trame. Nous observons alors …
 Nous testons ensuite le cas où la trame n’a pas la bonne longueur (elle est trop courte). Ceci déclenche également le ‘rcleanp’ indiquant une mauvaise lecture de la donnée.
 
-##### Bonne trame transmission
+### Bonne trame transmission
 
 Le signal ‘tavailp’ est actif depuis la collision, puis nous attribuons à ‘tdatai’ la bonne trame à transmettre. La transmission s’effectue correctement et une fois terminée le signal ‘tdonep’ s’active, indiquant la bonne transmission de trame.
 
-##### Mauvaise trame transmission
+### Mauvaise trame transmission
 
 Signal ‘tfinishp’...
 Nous simulons finalement une mauvaise transmission en activant le signal ‘tabortp’ ce qui interrompt la transmission au top d’horloge suivant. Une fois qu’il repasse à ‘0’ la transmission s’effectue à nouveau.
 
 ## Résultats de la synthèse
 
-##### Fréquence maximale de fonctionnement
-Les spécifications étaient d’avoir une clock à 100ns, et le ‘slack’ est de 94.163ns (valeur positive), ce qui signifie que l’on pourrait fonctionner à une période d’horloge de 100ns - 94.163ns et que la simulation fonctionnerait aussi. Ainsi la fréquence maximale est de
-\[
-\frac 1(100-94.163)e-6=171 321
-\]
+### Fréquence maximale de fonctionnement
+Les spécifications étaient d’avoir une clock à 100ns, et le ‘slack’ est de 94.163ns (valeur positive), ce qui signifie que l’on pourrait fonctionner à une période d’horloge de 100ns - 94.163ns et que la simulation fonctionnerait aussi. Ainsi la fréquence maximale est de 1/(T-WNS) = 1/((100 - 94.163)e-9) = 171.321 Mhz. 
